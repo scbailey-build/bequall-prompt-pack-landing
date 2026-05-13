@@ -266,21 +266,39 @@
           body: JSON.stringify({ email }),
         });
 
-        const data = await res.json();
-
         if (res.ok) {
           form.style.display = 'none';
           successMsg.style.display = 'block';
-          // redirect to thank-you after brief pause
           setTimeout(() => { window.location.href = '/thank-you.html'; }, 2500);
         } else {
+          let data = {};
+          try { data = await res.json(); } catch {}
           throw new Error(data.error || 'Something went wrong — try again or email scott@bequall.com');
         }
       } catch (err) {
-        errorMsg.textContent = err.message;
-        errorMsg.style.display = 'block';
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Get the Pack — Free';
+        // Fallback: if API not available (static hosting), show mailto option
+        if (err.name === 'TypeError' || err.message.includes('fetch') || err.message.includes('NetworkError') || err.message === 'Failed to fetch') {
+          form.style.display = 'none';
+          successMsg.innerHTML = `<div class="card rounded-xl p-5 text-left">
+            <div class="flex items-start gap-3">
+              <span class="text-2xl">📬</span>
+              <div>
+                <p class="font-semibold text-white">One step — send a quick email to get the pack.</p>
+                <p class="text-sm text-slate-400 mt-1">Click below and we'll send it right back:</p>
+                <a href="mailto:scott@bequall.com?subject=Send%20me%20the%20AI%20Prompt%20Pack&body=Hi%20Scott%2C%20please%20send%20me%20the%20AI%20Operating%20Baseline%20Prompt%20Pack.%20My%20email%20is%3A%20${encodeURIComponent(email)}"
+                   class="inline-block mt-3 bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors">
+                  Email scott@bequall.com →
+                </a>
+              </div>
+            </div>
+          </div>`;
+          successMsg.style.display = 'block';
+        } else {
+          errorMsg.textContent = err.message;
+          errorMsg.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Get the Pack — Free';
+        }
       }
     });
   </script>
