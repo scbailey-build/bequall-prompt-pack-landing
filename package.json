@@ -1,0 +1,16 @@
+{
+  "name": "bequall-prompt-pack-landing",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.22.2"
+  },
+  "devDependencies": {
+    "puppeteer": "^24.43.1"
+  }
+}
