@@ -260,7 +260,7 @@
       errorMsg.style.display = 'none';
 
       try {
-        const res = await fetch('/api/subscribe', {
+        const res = await fetch('https://bequall.app.n8n.cloud/webhook/bequall-subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email }),
